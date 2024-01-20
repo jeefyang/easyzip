@@ -163,3 +163,5 @@ xx/
 SmartZip/
 test/
 *.autosave
+*.log
+*.json

@@ -30,7 +30,7 @@
      <number>-1</number>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab_common">
      <property name="accessibleName">
@@ -706,12 +706,12 @@
        <rect>
         <x>20</x>
         <y>260</y>
-        <width>81</width>
+        <width>91</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>配置文件路径</string>
+       <string>配置文件夹路径</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="edit_config_url">

@@ -15,10 +15,20 @@ class Ui_Update(QMainWindow,Ui_MainWindow):
         self.edit_config_url.setAcceptDrops(True)
         self.edit_log_url.setAcceptDrops(True)
         self.edit_zip_url.setAcceptDrops(True)
+        # 拖放事件
+        self.__set_edit_zip_list_drag()
         self.__set_lineedit_drag(self.edit_output_dir)
         self.__set_lineedit_drag(self.edit_zip_url)
         self.__set_lineedit_drag(self.edit_log_url)
         self.__set_lineedit_drag(self.edit_config_url)
+        # 读取按钮事件
+        self.__read_multifile_event(self.btn_input_list,self.edit_input_zip_list)
+        self.__read_folder_event(self.btn_output,self.edit_output_dir)
+        self.__read_folder_event(self.btn_config_url,self.edit_config_url)
+        self.__read_folder_event(self.btn_log_url,self.edit_log_url)
+        self.__read_folder_event(self.btn_zip_url,self.edit_zip_url)
+        
+
         # self.combo_default_select_exe
 
     @property
@@ -201,3 +211,47 @@ class Ui_Update(QMainWindow,Ui_MainWindow):
         
         o.dragEnterEvent=dragenterevent
         o.dropEvent=dropevent
+
+    def __set_edit_zip_list_drag(self):
+        '''压缩包路径拖放事件'''
+        def dragenterevent( e: QDragEnterEvent | None):
+            assert e is not None
+            minedata = e.mimeData()
+            assert minedata is not None
+            if minedata.hasUrls() or minedata.hasText():
+                e.accept()
+            else:
+                e.ignore()
+        def dropevent( e: QDropEvent | None) -> None:
+            assert e is not None
+            minedata = e.mimeData()
+            assert minedata is not None
+            if minedata.hasUrls():
+                for url in minedata.urls():
+                    str = url.toLocalFile()
+                    self.edit_input_zip_list.append(str)
+            elif minedata.hasText():
+                str = minedata.text()
+                self.edit_input_zip_list.append(str)
+        self.edit_input_zip_list.dragEnterEvent=dragenterevent
+        self.edit_input_zip_list.dropEvent=dropevent
+        pass
+
+    def __read_folder_event(self,btn:QPushButton,line:QLineEdit):
+        '''读取文件夹事件'''
+        def click():
+            url=QFileDialog.getExistingDirectory(self,"选取文件夹")
+            line.setText(url)
+        btn.clicked.connect(click)
+        pass
+
+    def __read_multifile_event(self,btn:QPushButton,text:QTextEdit):
+        '''多文件读取事件'''
+        def click():
+            urls=QFileDialog.getOpenFileNames(self,"选取多个文件")[0]
+            for url in urls:
+                text.append(str(url))
+                pass
+            pass
+        btn.clicked.connect(click)
+        pass
