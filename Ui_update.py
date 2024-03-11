@@ -5,13 +5,14 @@ import sys
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QListView, QAbstractItemView, QTreeView, QApplication, QDialog, QPushButton, QMessageBox, QWidget, QTextEdit, QLineEdit
 from PyQt6.QtGui import QDragEnterEvent, QDropEvent
 from typing import Literal
+from Ui_unzip_program import Ui_Dialog as win_unzip_program
 
 sort_pw_type = Literal['次数', '名称', '日期']
 main_exe_type = Literal["命令行", "图形GUI"]
 overwrite_type = Literal["直接覆盖", "跳过不覆盖", "重命名新文件", "重命名旧文件"]
 
 
-class Ui_Update(QMainWindow, Ui_MainWindow):
+class Ui_Main_Update(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
@@ -267,9 +268,9 @@ class Ui_Update(QMainWindow, Ui_MainWindow):
         self.check_default_autoexit.setChecked(v)
 
     @property
-    def select_default_sort_pw(self):
+    def select_default_sort_pw(self) -> Literal['次数', '名称', '日期']:
         '''默认密码排序选择'''
-        return self.combo_default_sort_pw.currentText()
+        return self.combo_default_sort_pw.currentText()  # type:ignore
 
     @select_default_sort_pw.setter
     def select_default_sort_pw(self, v: Literal['次数', '名称', '日期']):
@@ -414,9 +415,49 @@ class Ui_Update(QMainWindow, Ui_MainWindow):
     def show_dialog(self, type: Literal["warn", "info", "error"], v: str):
         '''弹框提示-'''
         if type == "warn":
-            QMessageBox.warning(None, "警告", v)
+            QMessageBox.warning(None, "警告", v)  # type: ignore
         elif type == "info":
-            QMessageBox.information(None, "提示", v)
+            QMessageBox.information(None, "提示", v)  # type: ignore
         elif type == "error":
-            QMessageBox.critical(None, "错误", v)
+            QMessageBox.critical(None, "错误", v)  # type: ignore
         pass
+
+
+class Ui_Unzip_Program_Update(QWidget, win_unzip_program):
+
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
+        self.setupUi(self)
+        self.plain_unzip_progress.setReadOnly(True)
+        self.progress_allcount = 0
+        '''解压总数'''
+        self.progress_currentcount = 0
+        '''当前解压个数'''
+
+    def msg_add(self, m: str):
+        '''添加信息'''
+        self.plain_unzip_progress.append(m)
+        pass
+
+    def msg_clear(self):
+        '''清空信息'''
+        self.plain_unzip_progress.setPlainText("")
+        pass
+
+    def progress_add(self, i: int = 1):
+        '''进度加一'''
+        self.progress_currentcount += i
+        if self.progress_allcount == 0:
+            self.label_unzip_progress.setText(
+                f'已经解压了{self.progress_currentcount}个文件')
+            pass
+        else:
+            a = int(self.progress_currentcount /
+                    self.progress_allcount*10000)/100
+            self.label_unzip_progress.setText(
+                f'总:{self.progress_allcount};  已解压:{self.progress_currentcount};  {a}%')
+            pass
+
+    def progress_settext(self, s: str):
+        '''直接修改进度信息'''
+        self.label_unzip_progress.setText(s)

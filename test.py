@@ -3,6 +3,7 @@
 
 import subprocess
 from easyZip import EasyZip
+import envoy
 
 # # url = "//192.168.123.3/藏经阁/bdyun/test2/新建文件夹/soul-ibm5100-4736-20231115.zip"
 # url="//192.168.123.3/藏经阁/bdyun/test2/新建文件夹/1 (1).zip"
@@ -26,9 +27,16 @@ from easyZip import EasyZip
 # names=ar.getnames()
 # print(names)
 
-class xx:
-    def __init__(self) -> None:
-        print(self.__dict__)
-        pass
-    
-xx()
+# cmd = "ping baidu.com"
+# c = envoy.run(cmd)
+# if c.std_out != None:
+#     print(c.std_out)
+# c = subprocess.Popen(
+#     cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+# if c.stdout != None:
+#     print(c.stdout.read())
+a:str=""
+if not a:
+    print("true")
+else:
+    print("false")
